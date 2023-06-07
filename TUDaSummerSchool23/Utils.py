@@ -277,7 +277,7 @@ def get_hash(key, repeat=1):
     hash_value = key
     while repeat > 0:
         sha256_hash = hashlib.sha256()
-        sha256_hash.update(key.encode('utf-8'))
+        sha256_hash.update(hash_value.encode('utf-8'))
         hash_value = sha256_hash.hexdigest()
         repeat -= 1
     return hash_value
