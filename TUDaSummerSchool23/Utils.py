@@ -273,12 +273,13 @@ def dencrypt_string(string, key):
         decrypted += chr((ord(char) - seed(key)) % MAX_CHR)
     return decrypted
 
-def get_hash(key, repeat=0):
-    sha256_hash = hashlib.sha256()
-    sha256_hash.update(key.encode('utf-8'))
-    hash_value = sha256_hash.hexdigest()
-    if repeat > 0:
-        get_hash(hash_value, repeat - 1)
+def get_hash(key, repeat=1):
+    hash_value = key
+    while repeat > 0:
+        sha256_hash = hashlib.sha256()
+        sha256_hash.update(key.encode('utf-8'))
+        hash_value = sha256_hash.hexdigest()
+        repeat -= 1
     return hash_value
 
 
