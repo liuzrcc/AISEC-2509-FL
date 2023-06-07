@@ -251,29 +251,34 @@ def plot_accepted_models(indices_of_accepted_models, benign_models, poisoned_mod
 
 def solution(key=""):
     for task in range(1, len(HASHES)):
-        if get_hash(get_hash(key)) == HASHES[task]:
+        if get_hash(key, 2000) == HASHES[task]:
             display(Markdown(dencrypt_string(SOLUTIONS[task] ,key)))
             return
     display(Markdown(dencrypt_string(SOLUTIONS[0] , "You Should Focus On The Task")))
 
 def encrypt_string(string, key):
-    key = int(get_hash(key), 16) % MAX_CHR
+    seed = lambda s: int(s, 16) % MAX_CHR
     encrypted = ""
     for char in string:
-        encrypted += chr((ord(char) + key) % MAX_CHR)
+        key = get_hash(key)
+        encrypted += chr((ord(char) + seed(key)) % MAX_CHR)
+
     return encrypted
 
 def dencrypt_string(string, key):
-    key = int(get_hash(key), 16) % MAX_CHR
+    seed = lambda s: int(s, 16) % MAX_CHR
     decrypted = ""
     for char in string:
-        decrypted += chr((ord(char) - key) % MAX_CHR)
+        key = get_hash(key)
+        decrypted += chr((ord(char) - seed(key)) % MAX_CHR)
     return decrypted
 
-def get_hash(key):
+def get_hash(key, repeat=0):
     sha256_hash = hashlib.sha256()
     sha256_hash.update(key.encode('utf-8'))
     hash_value = sha256_hash.hexdigest()
+    if repeat > 0:
+        get_hash(hash_value, repeat - 1)
     return hash_value
 
 
